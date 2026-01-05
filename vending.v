@@ -9,17 +9,16 @@ module vending (
     wire [6:0] dynval;
     reg [21:0] clk_div;  
   
-    // Logic for active-low buttons
-    assign reset_i   = ~reset;   // Becomes 1 when KEY1 is pressed
-    assign enable_i  = reset;    // Becomes 1 when KEY1 is NOT pressed
-    assign nickel_i  = ~nickel;  // Becomes 1 when KEY2 is pressed
-    assign dime_i    = ~dime;    // Becomes 1 when KEY3 is pressed
-    assign quarter_i = ~quarter; // Becomes 1 when KEY4 is pressed
-
+    assign reset_i   = ~reset;   
+    assign enable_i  = reset;    
+    assign nickel_i  = ~nickel;  
+    assign dime_i    = ~dime;    
+    assign quarter_i = ~quarter; 
+    
     always @(posedge clk) clk_div <= clk_div + 1;
 
     fsm fsm_inst (
-        .clk(clk_div[17]), // Slow enough to debounce, fast enough to catch a click
+        .clk(clk_div[17]), 
         .reset(reset_i), 
         .enable(enable_i),
         .nickel(nickel_i), 
@@ -31,9 +30,10 @@ module vending (
     );
 
     sevenseg display_inst (
-        .reset(clk_div[16]), // Renamed reset to clk_refresh for clarity
+        .reset(clk_div[16]),
         .bcdshow(dynval),
         .disp(disp),
         .dig(dig)
     );
+
 endmodule
